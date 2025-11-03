@@ -30,12 +30,13 @@ var<private> UVS: array<vec2f, 6> = array<vec2f, 6>(
 @vertex
 fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> VertexOutput {
     // TODO: Create a VertexOutput and fill in the clip_position and uv
-
+    let position = POSITIONS[in_vertex_index];
+    let uv = UVS[in_vertex_index];
 
     var out: VertexOutput;
     // TODO: Set the clip position and UV coordinates
-    out.clip_position = vec4f(0.0, 0.0, 0.0, 1.0); // Replace this line
-    out.uv = vec2f(0.0, 0.0); // Replace this line
+    out.clip_position = vec4f(position, 0.0, 1.0);
+    out.uv = uv;
     return out;
 }
 
@@ -43,7 +44,8 @@ fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> VertexOutput {
 fn fs_main(in: VertexOutput) -> @location(0) vec4f {
     // TODO: Sample the texture at the UV coordinates
     // Hint: Use textureSample(texture, sampler, uv_coordinates)
+    let color = textureSample(my_texture, my_sampler, in.uv);
 
     // TODO: Sample and return the texture color
-    return vec4f(1.0, 0.0, 1.0, 1.0); // Replace with textureSample
+    return color;
 }

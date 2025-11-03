@@ -23,10 +23,20 @@ fn main() {
 
     // Placeholder for pixel calculations
     let pixels: Vec<(u32, u32, Rgb<u8>)> =
-        (0..image_height)
+        (0..image_height).into_par_iter()
         .flat_map(|y| {
-            (0..image_width).map(move |x| {
-                let pixel: Rgb<u8> = Rgb([0, 0, 0]);
+            (0..image_width).into_par_iter().map(move |x| {
+                let cx = x_min + (x as f64 / image_width as f64) * (x_max - x_min);
+                let cy = y_min + (y as f64 / image_height as f64) * (y_max - y_min);
+                let c = Complex::new(cx, cy);
+                let mut z = Complex::new(0.0, 0.0);
+                let mut iteration = 0;
+                while iteration < max_iterations && z.norm_sqr() <= 4.0 {
+                    z = z * z + c;
+                    iteration += 1;
+                }
+                let hue = (iteration as f32 / max_iterations as f32) * 360.0;
+                let pixel = hsv_to_rgb(hue, 1.0, 1.0);
                 (x, y, pixel)
             })
         })

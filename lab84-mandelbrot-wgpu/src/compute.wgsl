@@ -52,25 +52,27 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
     // Loop while |z|^2 <= 4.0 and iterations < max_iterations
 
     // TODO: Implement the while loop
-    // while (/* condition */) {
-    //     let z_real_new = /* calculate real part of z^2 + c */;
-    //     let z_imag_new = /* calculate imaginary part of z^2 + c */;
-    //     z = vec2f(z_real_new, z_imag_new);
-    //     iterations = iterations + 1u;
-    // }
+    while (iterations < max_iterations && (z.x * z.x + z.y * z.y) <= 4.0) {
+        let z_real_new = z.x * z.x - z.y * z.y + c.x;
+        let z_imag_new = 2.0 * z.x * z.y + c.y;
+        z = vec2f(z_real_new, z_imag_new);
+        iterations = iterations + 1u;
+    }
 
     var color: vec4f;
     if iterations == max_iterations {
         // Point is in the Mandelbrot set - use angle-based coloring
         // TODO: Calculate the angle and hue
-        let angle = 0.0; // Replace with atan2(z.y, z.x)
+        // let angle = 0.0; // Replace with atan2(z.y, z.x)
+        let angle = atan2(z.y, z.x);
         let hue_norm = (angle + 3.1415926535) / (2.0 * 3.1415926535);
         let hue = hue_norm * 360.0;
         color = hsv_to_rgb(hue, 1.0, 1.0);
     } else {
         // Point escaped -> color based on iteration count
         // TODO: Calculate hue based on iteration count
-        let hue = 0.0; // Replace with (f32(iterations) / f32(max_iterations)) * 360.0
+        // let hue = 0.0; // Replace with (f32(iterations) / f32(max_iterations)) * 360.0
+        let hue = (f32(iterations) / f32(max_iterations)) * 360.0;
         color = hsv_to_rgb(hue, 1.0, 1.0);
     }
 

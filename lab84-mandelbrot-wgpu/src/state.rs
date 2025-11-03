@@ -153,6 +153,7 @@ impl State {
                 wgpu::BindGroupEntry {
                     binding: 0,
                     resource: view_params_buffer.as_entire_binding(),
+                    
                 },
                 wgpu::BindGroupEntry {
                     binding: 1,
